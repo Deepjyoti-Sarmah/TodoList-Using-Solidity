@@ -13,7 +13,7 @@ App = {
   loadWeb3: async () => {
     if (typeof web3 !== 'undefined') {
       App.web3Provider = web3.currentProvider
-      web3 = new Web3(web3.currentProvider)
+      web3 =  new Web3(web3.currentProvider)
     } else {
       window.alert("Please connect to Metamask.")
     }
@@ -109,6 +109,14 @@ App = {
       $newTaskTemplate.show()
 
     }
+  },
+
+
+  createTask: async () => {
+    App.setLoading(true)
+    const connect = $('newTask') 
+    await App.todoList.createTask(connect)
+    window.location.reload()
   },
 
   setLoading: (boolean) => {
