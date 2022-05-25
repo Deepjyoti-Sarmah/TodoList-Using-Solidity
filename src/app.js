@@ -13,7 +13,7 @@ App = {
   loadWeb3: async () => {
     if (typeof web3 !== 'undefined') {
       App.web3Provider = web3.currentProvider
-      web3 =  new Web3(web3.currentProvider)
+      web3 = new Web3(web3.currentProvider)
     } else {
       window.alert("Please connect to Metamask.")
     }
@@ -76,27 +76,26 @@ App = {
     App.setLoading(false)
   },
 
-  renderTasks : async () =>{
-    //load the task form the blockchain 
+  renderTasks: async () => {
+    // Load the total task count from the blockchain
     const taskCount = await App.todoList.taskCount()
     const $taskTemplate = $('.taskTemplate')
 
-    //Render out each task with a new task template
-    for (let i = 0; i <= taskCount; i++) {
-      //Fetch the task ata from the blockchain 
+    // Render out each task with a new task template
+    for (var i = 1; i <= taskCount; i++) {
+      // Fetch the task data from the blockchain
       const task = await App.todoList.tasks(i)
       const taskId = task[0].toNumber()
       const taskContent = task[1]
       const taskCompleted = task[2]
 
-      //create the html for the task
+      // Create the html for the task
       const $newTaskTemplate = $taskTemplate.clone()
       $newTaskTemplate.find('.content').html(taskContent)
       $newTaskTemplate.find('input')
                       .prop('name', taskId)
                       .prop('checked', taskCompleted)
                       .on('click', App.toggleCompleted)
-
 
       // Put the task in the correct list
       if (taskCompleted) {
@@ -107,15 +106,20 @@ App = {
 
       // Show the task
       $newTaskTemplate.show()
-
     }
   },
 
-
   createTask: async () => {
     App.setLoading(true)
-    const connect = $('newTask') 
-    await App.todoList.createTask(connect)
+    const content = $('#newTask').val()
+    await App.todoList.createTask(content)
+    window.location.reload()
+  },
+
+  toggleCompleted: async (e) => {
+    App.setLoading(true)
+    const taskId = e.target.name
+    await App.todoList.toggleCompleted(taskId)
     window.location.reload()
   },
 
